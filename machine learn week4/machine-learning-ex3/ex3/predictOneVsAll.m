@@ -31,10 +31,9 @@ X = [ones(m, 1) X];
 %       
 
 
-
-
-
-
+predictions = sigmoid(X * all_theta');
+[max_values indices] = max(predictions,[],2);
+p = indices;
 
 % =========================================================================
 
