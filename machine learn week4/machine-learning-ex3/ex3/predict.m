@@ -29,6 +29,8 @@ a2 = [ones(m,1) a2];
 z3 = a2 * Theta2';
 predictions = sigmoid(z3);
 
+
+
 [max_values indices] = max(predictions,[],2);
 p = indices;
 
