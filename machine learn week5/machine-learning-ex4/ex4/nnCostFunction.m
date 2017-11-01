@@ -63,20 +63,60 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+a1 = [ones(m,1) X];
+z2 = a1  * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(m,1) a2];
+z3 = a2 * Theta2';
+predictions = sigmoid(z3);
+
+yk = zeros(m,num_labels);
+
+for i = 1 : m
+	yk(i,y(i)) = 1;
+end
+
+J = 1 / m * sum(sum( -1 * yk .* log(predictions) - (1-yk) .* log(1-predictions))) + lambda /(2 * m) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
+
+a3 = predictions;
+
+
+%delta_3 = a3 - yk;
+%delta_2 = delta_3 * Theta2(:,2:end) .* sigmoidGradient(z2);
+%Theta2_grad = Theta2_grad + delta_3' * a2;
+%Theta1_grad = Theta1_grad + delta_2' * a1;
+
+%Theta1_grad = (1 / m) * Theta1_grad;
+%Theta2_grad = (1 / m) * Theta2_grad;
+
+% for-loop compute
+
+Delta2 = 0;
+Delta1 = 0;
+
+for t = 1 : m
+
+	a1 = [1;X(t,:)'];
+	z2 = Theta1 * a1;
+	a2 = [1;sigmoid(z2)];
+	z3 = Theta2 * a2;
+	a3 = sigmoid(z3);
+
+	d3 = a3 - yk(t,:)';
+	d2 = ((Theta2(:,2:end))' * d3) .* sigmoidGradient(z2);
+
+	Delta2 += (d3 * a2');
+	Delta1 += (d2 * a1');
+end
+
+
+Theta1_grad = (1 / m) * Delta1;
+Theta2_grad = (1 / m) * Delta2;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad(:,2:end) += (lambda / m) * Theta1(:,2:end);
+Theta2_grad(:,2:end) += (lambda / m) * Theta2(:,2:end);
 
 
 
